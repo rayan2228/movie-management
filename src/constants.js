@@ -3,6 +3,7 @@ import 'dotenv/config'
 const PORT = process.env.PORT || 8000
 const APP_ENV = process.env.APP_ENV
 const APP_URL = process.env.APP_URL
+const ORIGIN_URLS = process.env.ORIGIN_URLS
 const DB_URL = process.env.DB_URL
 const VERIFICATION_SIGNATURE = process.env.VERIFICATION_SIGNATURE
 const ACCESS_TOKEN_SIGNATURE = process.env.ACCESS_TOKEN_SIGNATURE
@@ -14,6 +15,7 @@ export {
     PORT,
     APP_ENV,
     APP_URL,
+    ORIGIN_URLS
     DB_URL,
     VERIFICATION_SIGNATURE,
     ACCESS_TOKEN_SIGNATURE,
