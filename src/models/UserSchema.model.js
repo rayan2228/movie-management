@@ -1,8 +1,10 @@
 import mongoose, { model, Schema } from "mongoose";
-import { emailValidator, passwordValidator } from "../utils/validator.js";
-import { ACCESS_TOKEN_EXPIRE, ACCESS_TOKEN_SIGNATURE, REFRESH_TOKEN_EXPIRE, REFRESH_TOKEN_SIGNATURE } from "../constants.js";
 import jwt from "jsonwebtoken";
+import bcrypt from "bcrypt";
+import { emailValidator, passwordValidator } from "../utils/validator.js";
+import { ACCESS_TOKEN_EXPIRE, ACCESS_TOKEN_SIGNATURE, REFRESH_TOKEN_EXPIRE, REFRESH_TOKEN_SIGNATURE, VERIFICATION_TOKEN_EXPIRE, VERIFICATION_TOKEN_SIGNATURE } from "../constants.js";
 import { TryCatch } from "../utils/TryCatch.js";
+
 const UserSchema = new Schema({
     displayname: {
         type: String,
@@ -67,7 +69,7 @@ userSchema.methods.mailVerificationToken = TryCatch(function () {
         _id: this._id,
         email: this.email,
         username: this.username
-    }, JWT_SECRET, { expiresIn: "5m" })
+    }, VERIFICATION_TOKEN_SIGNATURE, { expiresIn: VERIFICATION_TOKEN_EXPIRE })
 })
 
 userSchema.methods.accessTokenGenerate = TryCatch(function () {
@@ -87,3 +89,6 @@ userSchema.methods.refreshTokenGenerate = TryCatch(function () {
         role: this.role
     }, REFRESH_TOKEN_SIGNATURE, { expiresIn: REFRESH_TOKEN_EXPIRE })
 })
+
+
+export const User = mongoose.models.User || model("User", UserSchema);
