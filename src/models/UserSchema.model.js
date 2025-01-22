@@ -61,7 +61,7 @@ const UserSchema = new Schema(
   { timestamps: true }
 );
 
-userSchema.pre("save", async function (next) {
+UserSchema.pre("save", async function (next) {
   try {
     if (!this.isModified("password")) return next();
     this.password = await bcrypt.hash(this.password, 10);
@@ -72,7 +72,7 @@ userSchema.pre("save", async function (next) {
   }
 });
 
-userSchema.methods.isPasswordCorrect = async function (password) {
+UserSchema.methods.isPasswordCorrect = async function (password) {
   try {
     return await bcrypt.compare(password, this.password);
   } catch (error) {
@@ -80,7 +80,7 @@ userSchema.methods.isPasswordCorrect = async function (password) {
   }
 };
 
-userSchema.methods.mailVerificationToken = function () {
+UserSchema.methods.mailVerificationToken = function () {
   try {
     return jwt.sign(
       {
@@ -96,7 +96,7 @@ userSchema.methods.mailVerificationToken = function () {
   }
 };
 
-userSchema.methods.accessTokenGenerate = function () {
+UserSchema.methods.accessTokenGenerate = function () {
   try {
     return jwt.sign(
       {
@@ -113,7 +113,7 @@ userSchema.methods.accessTokenGenerate = function () {
   }
 };
 
-userSchema.methods.refreshTokenGenerate = function () {
+UserSchema.methods.refreshTokenGenerate = function () {
   try {
     return jwt.sign(
       {
