@@ -1,5 +1,6 @@
 import jwt from "jsonwebtoken";
 import { APP_ENV, VERIFICATION_TOKEN_SIGNATURE } from "../constants.js";
+import { Role } from "../models/roleSchema.model.js";
 import { User } from "../models/UserSchema.model.js";
 import { sendMail } from "../services/mailService.js";
 import { verificationMail } from "../templates/mail/verificationMail.js";
@@ -26,7 +27,7 @@ const registerUser = TryCatch(async (req, res) => {
 
   // Check if username is taken
   const user = await User.findOne({
-    $or: [{ username }, { email }, { displayname }],
+    $or: [{ username }, { email }],
   });
   //   Check if username is taken
   if (user?.username === username) {
@@ -35,10 +36,6 @@ const registerUser = TryCatch(async (req, res) => {
   //   Check if email is taken
   if (user?.email === email) {
     throw new ApiError(400, "Email already taken");
-  }
-  //   Check if display name is taken
-  if (user?.displayname === displayname) {
-    throw new ApiError(400, "Display name already taken");
   }
 
   // Check if password is valid
@@ -134,4 +131,47 @@ const loginUser = TryCatch(async (req, res) => {
     );
 });
 
-export { loginUser, mailVerification, registerUser };
+const createRoleBasedUser = TryCatch(async (req, res) => {
+  // Code to create a role based user
+  const { displayname, username, email, password, role } = req.body;
+  // Check if required fields are missing
+  if ([displayname, username, email, password, role].includes(undefined)) {
+    throw new ApiError(400, "Missing required fields");
+  }
+  // Check if role exists
+  const roleExists = await Role.findOne({ name: role });
+  if (!roleExists) {
+    throw new ApiError(404, "Role not found");
+  }
+  // Check if username is taken
+  const user = await User.findOne({ $or: [{ username }, { email }] });
+  if (user) {
+    throw new ApiError(400, "Username already taken");
+  }
+  // Check if email is taken
+  const emailExists = await User.findOne({ email });
+  if (emailExists) {
+    throw new ApiError(400, "Email already taken");
+  }
+  // Check if password is valid
+  if (!passwordValidator(password)) {
+    throw new ApiError(
+      400,
+      "Password must be at least 8 characters long, include at least one uppercase letter, one lowercase letter, one number, and one special character."
+    );
+  }
+  // Create a new user
+  const newUser = await User.create({
+    displayname,
+    username,
+    email,
+    password,
+    role,
+  });
+  return res
+    .status(201)
+    .json(new ApiResponse(201, "role based user created", newUser));
+});
+
+export { createRoleBasedUser, loginUser, mailVerification, registerUser };
+
