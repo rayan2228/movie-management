@@ -7,4 +7,4 @@ class ApiResponse {
     }
 }
 
-expect default ApiResponse
+export default ApiResponse
