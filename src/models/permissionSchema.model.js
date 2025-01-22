@@ -1,5 +1,6 @@
 import mongoose, { model, Schema } from "mongoose";
-const roleSchema = new Schema(
+
+const permissionSchema = new Schema(
   {
     name: {
       type: String,
@@ -9,14 +10,9 @@ const roleSchema = new Schema(
     description: {
       type: String,
     },
-    permissions: [
-      {
-        type: Schema.Types.ObjectId,
-        ref: "Permission",
-      },
-    ],
   },
   { timestamps: true }
 );
 
-export const Role = mongoose.models.Role || model("Role", roleSchema);
+export const Permission =
+  mongoose.models.Permission || model("Permission", permissionSchema);
