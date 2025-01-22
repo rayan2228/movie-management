@@ -19,12 +19,14 @@ app.use(
 
 import movieRouter from "./routes/movie.route.js";
 import permissionRouter from "./routes/permission.route.js";
+import ratingRouter from "./routes/rating.route.js";
 import roleRouter from "./routes/role.route.js";
 import userRouter from "./routes/user.route.js";
 app.use("/api/v1", userRouter);
 app.use("/api/v1", permissionRouter);
 app.use("/api/v1", roleRouter);
 app.use("/api/v1", movieRouter);
+app.use("/api/v1", ratingRouter);
 
 app.get("/", (req, res) => {
   res.send("Hello World");
