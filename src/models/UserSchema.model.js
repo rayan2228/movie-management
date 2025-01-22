@@ -9,7 +9,7 @@ import {
   VERIFICATION_TOKEN_EXPIRE,
   VERIFICATION_TOKEN_SIGNATURE,
 } from "../constants.js";
-import { emailValidator, passwordValidator } from "../utils/validator.js";
+import { emailValidator } from "../utils/validator.js";
 
 const UserSchema = new Schema(
   {
@@ -39,11 +39,6 @@ const UserSchema = new Schema(
     password: {
       type: String,
       required: [true, "password is required"],
-      validate: {
-        validator: passwordValidator,
-        message:
-          "Password must be at least 8 characters long, include at least one uppercase letter, one lowercase letter, one number, and one special character.",
-      },
     },
     avatar: {
       publicId: String,

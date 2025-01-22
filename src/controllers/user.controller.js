@@ -40,6 +40,15 @@ const registerUser = TryCatch(async (req, res) => {
   if (user?.displayname === displayname) {
     throw new ApiError(400, "Display name already taken");
   }
+
+  // Check if password is valid
+  if (!passwordValidator(password)) {
+    throw new ApiError(
+      400,
+      "Password must be at least 8 characters long, include at least one uppercase letter, one lowercase letter, one number, and one special character."
+    );
+  }
+
   // Create a new user
   const newUser = await User.create({ displayname, username, email, password });
   // send verification mail
@@ -120,9 +129,9 @@ const loginUser = TryCatch(async (req, res) => {
       new ApiResponse(200, "Login successful", {
         accessToken,
         refreshToken,
+        user,
       })
     );
 });
 
 export { loginUser, mailVerification, registerUser };
-
