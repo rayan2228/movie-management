@@ -1,10 +1,11 @@
-import { APP_ENV } from "../constants.js";
+import jwt from "jsonwebtoken";
+import { APP_ENV, VERIFICATION_TOKEN_SIGNATURE } from "../constants.js";
 import { User } from "../models/UserSchema.model.js";
 import { sendMail } from "../services/mailService.js";
 import { verificationMail } from "../templates/mail/verificationMail.js";
 import ApiError from "../utils/ApiError.js";
+import ApiResponse from "../utils/ApiResponse.js";
 import { TryCatch } from "../utils/TryCatch.js";
-
 const generateAccessANDRefreshToken = async (user) => {
   const accessToken = user.accessTokenGenerate();
   const refreshToken = user.refreshTokenGenerate();
@@ -16,10 +17,11 @@ const generateAccessANDRefreshToken = async (user) => {
 // Register a new user
 const registerUser = TryCatch(async (req, res) => {
   // Code to create a user
+
   const { displayname, username, email, password } = req.body;
   // Check if required fields are missing
   if ([displayname, username, email, password].includes(undefined)) {
-    return res.status(400).json(new ApiError(400, "Missing required fields"));
+    throw new ApiError(400, "Missing required fields");
   }
 
   // Check if username is taken
@@ -27,67 +29,59 @@ const registerUser = TryCatch(async (req, res) => {
     $or: [{ username }, { email }, { displayname }],
   });
   //   Check if username is taken
-  if (user.username === username) {
-    return res.status(400).json(new ApiError(400, "Username already taken"));
+  if (user?.username === username) {
+    throw new ApiError(400, "Username already taken");
   }
   //   Check if email is taken
-  if (user.email === email) {
-    return res.status(400).json(new ApiError(400, "Email already taken"));
+  if (user?.email === email) {
+    throw new ApiError(400, "Email already taken");
   }
   //   Check if display name is taken
-  if (user.displayname === displayname) {
-    return res
-      .status(400)
-      .json(new ApiError(400, "Display name already taken"));
+  if (user?.displayname === displayname) {
+    throw new ApiError(400, "Display name already taken");
   }
   // Create a new user
   const newUser = await User.create({ displayname, username, email, password });
   // send verification mail
-  const mailVerificationToken = user.mailVerificationToken();
+  const mailVerificationToken = await newUser.mailVerificationToken();
   await sendMail(
-    user.email,
+    email,
     "Email Verification",
     "",
-    verificationMail(user.displayname, mailVerificationToken)
+    verificationMail(displayname, mailVerificationToken)
   );
 
   res.status(201).json(new ApiResponse(201, "User created", newUser));
 });
 
 // mail verification
-const mailVerification = async (req, res) => {
-  try {
-    const { token } = req.params;
+const mailVerification = TryCatch(async (req, res) => {
+  const { token } = req.params;
 
-    if (!token) {
-      return res.status(400).send("Invalid token");
-    }
-
-    // Decode the token
-    let decodedToken;
-    try {
-      decodedToken = jwt.verify(token, JWT_SECRET);
-    } catch (err) {
-      return res.status(400).send("Invalid or expired token");
-    }
-
-    // Update the user's email verification status
-    const user = await User.findByIdAndUpdate(
-      { _id: decodedToken._id },
-      { $set: { emailVerified: Date.now() } },
-      { new: true }
-    );
-
-    if (!user) {
-      return res.status(404).send("User not found");
-    }
-
-    return res.status(200).send("mail verified");
-  } catch (error) {
-    console.error("mailVerification Error:", error);
-    return res.status(500).send("An internal server error occurred");
+  if (!token) {
+    throw new ApiError(400, "Token not provided");
   }
-};
+
+  // Decode the token
+  let decodedToken;
+  decodedToken = jwt.verify(token, VERIFICATION_TOKEN_SIGNATURE);
+  if (!decodedToken) {
+    throw new ApiError(400, "Invalid or expired token");
+  }
+
+  // Update the user's email verification status
+  const user = await User.findByIdAndUpdate(
+    { _id: decodedToken._id },
+    { $set: { emailVerified: Date.now() } },
+    { new: true }
+  );
+
+  if (!user) {
+    throw new ApiError(404, "User not found");
+  }
+
+  return res.status(200).send("mail verified");
+});
 
 const loginUser = TryCatch(async (req, res) => {
   // Code to login a user
