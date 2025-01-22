@@ -11,5 +11,5 @@ const router = e.Router();
 
 router.route("/movies").get(getMovies).post(auth, createMovie);
 router.route("/movies/:id").get(auth, getMovie).put(auth, updateMovie);
-router.route("/users-movies/").get(auth, getMoviesByUser);
+router.route("/movies/users").get(auth, getMoviesByUser);
 export default router;
