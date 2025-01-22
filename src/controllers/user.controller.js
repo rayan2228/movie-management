@@ -7,6 +7,7 @@ import { verificationMail } from "../templates/mail/verificationMail.js";
 import ApiError from "../utils/ApiError.js";
 import ApiResponse from "../utils/ApiResponse.js";
 import { TryCatch } from "../utils/TryCatch.js";
+import { passwordValidator } from "../utils/validator.js";
 const generateAccessANDRefreshToken = async (user) => {
   const accessToken = user.accessTokenGenerate();
   const refreshToken = user.refreshTokenGenerate();
@@ -139,8 +140,8 @@ const createRoleBasedUser = TryCatch(async (req, res) => {
     throw new ApiError(400, "Missing required fields");
   }
   // Check if role exists
-  const roleExists = await Role.findOne({ name: role });
-  if (!roleExists) {
+  const roleExists = await Role.find({ _id: { $in: role } });
+  if (roleExists.length < 0) {
     throw new ApiError(404, "Role not found");
   }
   // Check if username is taken
