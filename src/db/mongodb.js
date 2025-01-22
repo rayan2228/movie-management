@@ -1,8 +1,8 @@
 import mongoose from "mongoose";
 import {
-    MONGODB_DB_NAME,
-    MONGODB_PASSWORD,
-    MONGODB_USERNAME,
+  MONGODB_DB_NAME,
+  MONGODB_PASSWORD,
+  MONGODB_USERNAME,
 } from "../constants.js";
 import { TryCatch } from "../utils/TryCatch.js";
 
