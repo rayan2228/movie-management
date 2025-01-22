@@ -17,8 +17,10 @@ app.use(
   })
 );
 
+import permissionRouter from "./routes/permission.route.js";
 import userRouter from "./routes/user.route.js";
 app.use("/api/v1", userRouter);
+app.use("/api/v1", permissionRouter);
 
 app.get("/", (req, res) => {
   res.send("Hello World");

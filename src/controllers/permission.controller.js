@@ -1,6 +1,7 @@
-import { Permission } from "../models/permissionSchema.model";
-import ApiResponse from "../utils/ApiResponse";
-import { TryCatch } from "../utils/TryCatch";
+import { Permission } from "../models/permissionSchema.model.js";
+import ApiError from "../utils/ApiError.js";
+import ApiResponse from "../utils/ApiResponse.js";
+import { TryCatch } from "../utils/TryCatch.js";
 
 const createPermission = TryCatch(async (req, res) => {
   // Code to create a permission
