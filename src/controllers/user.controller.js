@@ -57,8 +57,8 @@ const registerUser = TryCatch(async (req, res) => {
     "",
     verificationMail(displayname, mailVerificationToken)
   );
-
-  res.status(201).json(new ApiResponse(201, "User created", newUser));
+  const responseUser = { ...newUser._doc, password: undefined };
+  res.status(201).json(new ApiResponse(201, "User created", responseUser));
 });
 
 // mail verification
@@ -119,6 +119,7 @@ const loginUser = TryCatch(async (req, res) => {
     httpOnly: true,
     sameSite: "strict",
   };
+  const responseUser = { ...user._doc, password: undefined };
   res
     .status(200)
     .cookie("accessToken", accessToken, options)
@@ -127,7 +128,7 @@ const loginUser = TryCatch(async (req, res) => {
       new ApiResponse(200, "Login successful", {
         accessToken,
         refreshToken,
-        user,
+        responseUser,
       })
     );
 });
