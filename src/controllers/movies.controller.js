@@ -3,30 +3,6 @@ import ApiError from "../utils/ApiError.js";
 import ApiResponse from "../utils/ApiResponse.js";
 import { TryCatch } from "../utils/TryCatch.js";
 
-const createMovie = TryCatch(async (req, res) => {
-  const { title, description, released_at, duration, genre, language } =
-    req.body;
-  // Check if all the required fields are provided
-  if (
-    [title, description, released_at, duration, genre, language].includes(
-      undefined
-    )
-  ) {
-    throw new ApiError(400, "All fields are required", null);
-  }
-  // Create a new movie
-  const movie = await Movie.create({
-    title,
-    description,
-    released_at,
-    duration,
-    genre,
-    language,
-    created_by: req.user._id,
-  });
-  res.status(201).json(new ApiResponse(201, "Movie created", movie));
-});
-
 const getMovies = TryCatch(async (req, res) => {
   const movies = await Movie.find().select(
     "-__v -createdAt -updatedAt -created_by -total_rating  -avg_rating"
@@ -53,5 +29,50 @@ const getMoviesByUser = TryCatch(async (req, res) => {
   res.status(200).json(new ApiResponse(200, "Movies list", movies));
 });
 
-export { createMovie, getMovie, getMovies, getMoviesByUser };
+const createMovie = TryCatch(async (req, res) => {
+  const { title, description, released_at, duration, genre, language } =
+    req.body;
+  // Check if all the required fields are provided
+  if (
+    [title, description, released_at, duration, genre, language].includes(
+      undefined
+    )
+  ) {
+    throw new ApiError(400, "All fields are required", null);
+  }
+  // Create a new movie
+  const movie = await Movie.create({
+    title,
+    description,
+    released_at,
+    duration,
+    genre,
+    language,
+    created_by: req.user._id,
+  });
+  res.status(201).json(new ApiResponse(201, "Movie created", movie));
+});
 
+const updateMovie = TryCatch(async (req, res) => {
+  const { title, description, released_at, duration, genre, language } =
+    req.body;
+  // Check if all the required fields are provided
+  if (
+    [title, description, released_at, duration, genre, language].includes(
+      undefined
+    )
+  ) {
+    throw new ApiError(400, "All fields are required", null);
+  }
+  // Update the movie
+  const movie = await Movie.findOneAndUpdate(
+    { $and: [{ _id: req.params.id }, { created_by: req.user._id }] },
+    { $set: { title, description, released_at, duration, genre, language } },
+    { new: true }
+  );
+  if (!movie) {
+    throw new ApiError(404, "Movie not found", null);
+  }
+  res.status(200).json(new ApiResponse(200, "Movie updated", movie));
+});
+export { createMovie, getMovie, getMovies, getMoviesByUser , updateMovie};
