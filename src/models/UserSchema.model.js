@@ -46,7 +46,7 @@ const UserSchema = new Schema({
             type: mongoose.Schema.Types.ObjectId,
             ref: "Role"
         }
-    ]
+    ],
     emailVerified: Date,
     refreshToken: String
 
