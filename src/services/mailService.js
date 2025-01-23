@@ -1,11 +1,11 @@
 import nodemailer from "nodemailer";
 import {
-    EMAIL_HOST,
-    EMAIL_PASSWORD,
-    EMAIL_PORT,
-    EMAIL_SECURE,
-    EMAIL_SERVICE,
-    EMAIL_USERNAME,
+  EMAIL_HOST,
+  EMAIL_PASSWORD,
+  EMAIL_PORT,
+  EMAIL_SECURE,
+  EMAIL_SERVICE,
+  EMAIL_USERNAME,
 } from "../constants.js";
 
 const transporter = nodemailer.createTransport({
@@ -28,8 +28,7 @@ export async function sendMail(to, subject, text = "", html = "") {
       text,
       html,
     });
-    console.log("Message sent: %s", info.messageId);
   } catch (error) {
-    console.log("SENDMAIL ERROR", error);
+    throw new Error(`Error sending email ${error.message}`);
   }
 }

@@ -133,6 +133,16 @@ const loginUser = TryCatch(async (req, res) => {
     );
 });
 
+const logoutUser = TryCatch(async (req, res) => {
+  // Code to logout a user
+  const user = req.user;
+  user.refreshToken = "";
+  await user.save();
+  res.clearCookie("accessToken");
+  res.clearCookie("refreshToken");
+  return res.status(200).json(new ApiResponse(200, "Logout successful"));
+});
+
 const createRoleBasedUser = TryCatch(async (req, res) => {
   // Code to create a role based user
   const { displayname, username, email, password, role } = req.body;
@@ -175,5 +185,11 @@ const createRoleBasedUser = TryCatch(async (req, res) => {
     .json(new ApiResponse(201, "role based user created", newUser));
 });
 
-export { createRoleBasedUser, loginUser, mailVerification, registerUser };
+export {
+  createRoleBasedUser,
+  loginUser,
+  logoutUser,
+  mailVerification,
+  registerUser
+};
 

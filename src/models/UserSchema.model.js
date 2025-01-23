@@ -71,7 +71,7 @@ UserSchema.methods.isPasswordCorrect = async function (password) {
   try {
     return await bcrypt.compare(password, this.password);
   } catch (error) {
-    console.log("PASSWORD CHECK ERROR", error);
+    throw new Error(`PASSWORD COMPARE ERROR ${error.message}`);
   }
 };
 
@@ -87,7 +87,7 @@ UserSchema.methods.mailVerificationToken = function () {
       { expiresIn: VERIFICATION_TOKEN_EXPIRE }
     );
   } catch (error) {
-    console.log("MAIL VERIFICATION TOKEN GENERATE ERROR", error);
+    throw new Error(`MAIL VERIFICATION TOKEN ERROR ${error.message}`);
   }
 };
 
@@ -104,7 +104,7 @@ UserSchema.methods.accessTokenGenerate = function () {
       { expiresIn: ACCESS_TOKEN_EXPIRE }
     );
   } catch (error) {
-    console.log("ACCESS TOKEN GENERATE ERROR", error);
+    throw new Error(`ACCESS TOKEN GENERATE ERROR ${error.message}`);
   }
 };
 
@@ -121,7 +121,7 @@ UserSchema.methods.refreshTokenGenerate = function () {
       { expiresIn: REFRESH_TOKEN_EXPIRE }
     );
   } catch (error) {
-    console.log("REFRESH TOKEN GENERATE ERROR", error);
+    throw new Error(`REFRESH TOKEN GENERATE ERROR ${error.message}`);
   }
 };
 
