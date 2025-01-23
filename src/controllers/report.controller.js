@@ -1,4 +1,4 @@
-import Report from "../models/reportSchema.model.js";
+import { Report } from "../models/reportSchema.model.js";
 import ApiError from "../utils/ApiError.js";
 import ApiResponse from "../utils/ApiResponse.js";
 import { TryCatch } from "../utils/TryCatch.js";
@@ -41,3 +41,4 @@ const updateReport = TryCatch(async (req, res) => {
 });
 
 export { createReport, getReports, updateReport };
+

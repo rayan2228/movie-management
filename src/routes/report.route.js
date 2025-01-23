@@ -1,11 +1,11 @@
 import e from "express";
-import { auth } from "../middlewares/auth.middleware.js";
-import { checkAccess } from "../middlewares/checkAccess.middleware.js";
 import {
   createReport,
   getReports,
   updateReport,
-} from "../controllers/report.controller";
+} from "../controllers/report.controller.js";
+import { auth } from "../middlewares/auth.middleware.js";
+import { checkAccess } from "../middlewares/checkAccess.middleware.js";
 const router = e.Router();
 router
   .route("/reports")
