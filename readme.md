@@ -69,6 +69,29 @@ The API should now be running at `http://localhost:8000/api/v1` (or the port you
 
 Use a tool like [Postman](https://documenter.getpostman.com/view/35167967/2sAYQdkAnc) to test the API endpoints.
 
+## Accounts for Testing
+
+Use the following accounts to test authentication-related features of the API:
+
+### Admin Account:
+
+```
+Email: admin@admin.com
+Password: Pa$$0word
+```
+
+### Regular User Account:
+
+```
+Email: rayanhossain.dev@gmail.com
+Password: Pa$$0word
+```
+
+```
+Email: rayanh.dev@gmail.com
+Password: Pa$$0word
+```
+
 ## Project Structure
 
 ```
