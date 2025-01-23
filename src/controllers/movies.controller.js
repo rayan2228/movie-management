@@ -24,7 +24,7 @@ const getMovie = TryCatch(async (req, res) => {
 const getMoviesByUser = TryCatch(async (req, res) => {
   const movies = await Movie.find({ created_by: req.user._id }).populate(
     "created_by",
-    "-_id displayname username email avatar"
+    "displayname username email avatar"
   );
   res.status(200).json(new ApiResponse(200, "Movies list", movies));
 });
@@ -75,4 +75,5 @@ const updateMovie = TryCatch(async (req, res) => {
   }
   res.status(200).json(new ApiResponse(200, "Movie updated", movie));
 });
-export { createMovie, getMovie, getMovies, getMoviesByUser , updateMovie};
+export { createMovie, getMovie, getMovies, getMoviesByUser, updateMovie };
+
