@@ -95,19 +95,19 @@ const loginUser = TryCatch(async (req, res) => {
   const { usernameOrEmail, password } = req.body;
   // Check if required fields are missing
   if ([usernameOrEmail, password].includes(undefined)) {
-    return res.status(400).json(new ApiError(400, "Missing required fields"));
+    throw new ApiError(400, "Missing required fields");
   }
   // Check if user exists
   const user = await User.findOne({
     $or: [{ username: usernameOrEmail }, { email: usernameOrEmail }],
   });
   if (!user) {
-    return res.status(404).json(new ApiError(404, "User not found"));
+    throw new ApiError(404, "User not found");
   }
   // Check if password is correct
   const isPasswordCorrect = await user.isPasswordCorrect(password);
   if (!isPasswordCorrect) {
-    return res.status(401).json(new ApiError(401, "Invalid credentials"));
+   throw new ApiError(401, "Invalid credentials");
   }
   // Generate access and refresh tokens
   const { accessToken, refreshToken } = await generateAccessANDRefreshToken(
