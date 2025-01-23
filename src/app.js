@@ -2,7 +2,7 @@ import cookieParser from "cookie-parser";
 import cors from "cors";
 import e from "express";
 import { ORIGIN_URLS } from "./constants.js";
-import errorHandler from "./middlewares/errorhandler.middleware.js";
+import errorHandler from "./middlewares/errorHandler.middleware.js";
 import ApiError from "./utils/ApiError.js";
 import ApiResponse from "./utils/ApiResponse.js";
 import { TryCatch } from "./utils/TryCatch.js";
@@ -18,6 +18,7 @@ app.use(
     credentials: true,
   })
 );
+
 
 import movieRouter from "./routes/movie.route.js";
 import permissionRouter from "./routes/permission.route.js";
