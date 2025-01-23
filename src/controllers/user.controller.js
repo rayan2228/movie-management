@@ -87,7 +87,7 @@ const mailVerification = TryCatch(async (req, res) => {
     throw new ApiError(404, "User not found");
   }
 
-  return res.status(200).send("mail verified");
+  return res.status(200).json(new ApiResponse(200, "Email verified", user));
 });
 
 const loginUser = TryCatch(async (req, res) => {

@@ -4,6 +4,8 @@ import e from "express";
 import { ORIGIN_URLS } from "./constants.js";
 import errorHandler from "./middlewares/errorhandler.middleware.js";
 import ApiError from "./utils/ApiError.js";
+import ApiResponse from "./utils/ApiResponse.js";
+import { TryCatch } from "./utils/TryCatch.js";
 const app = e();
 
 app.use(e.json({ limit: "16mb" }));
@@ -22,19 +24,26 @@ import permissionRouter from "./routes/permission.route.js";
 import ratingRouter from "./routes/rating.route.js";
 import roleRouter from "./routes/role.route.js";
 import userRouter from "./routes/user.route.js";
+
 app.use("/api/v1", userRouter);
 app.use("/api/v1", permissionRouter);
 app.use("/api/v1", roleRouter);
 app.use("/api/v1", movieRouter);
 app.use("/api/v1", ratingRouter);
 
-app.get("/", (req, res) => {
-  res.send("Hello World");
-});
+app.get(
+  "/",
+  TryCatch(async (req, res) => {
+    return res.json(new ApiResponse(200, "Welcome to Movie API"));
+  })
+);
 
-app.all("*", (_, res) => {
-  res.json(new ApiError(404, "fail", "Route not found", null));
-});
+app.all(
+  "*",
+  TryCatch(async (req, res, next) => {
+    throw new ApiError(404, "Route not found");
+  })
+);
 
 app.use(errorHandler);
 
