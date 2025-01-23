@@ -45,7 +45,7 @@ yarn install
 
 ### 3. Set Up Environment Variables
 
-Create a `.env` file in the root directory and add the following variables from `.env.example` file
+Create a `.env` file in the root directory and add the following variables from `.env.example` file.
 
 ### 4. Start the Server
 

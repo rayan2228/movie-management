@@ -1,4 +1,4 @@
-import { APP_URL, PORT } from "../../constants.js";
+import { APP_ENV, APP_URL, PORT } from "../../constants.js";
 
 export function verificationMail(displayname, token) {
   return `<!DOCTYPE html>
@@ -67,7 +67,11 @@ export function verificationMail(displayname, token) {
         <p>Hi ${displayname},</p>
         <p>Thank you for signing up! Please click the button below to verify your email address:</p>
         <div class="email-button">
-          <a href="${APP_URL}:${PORT}/api/v1/users/verify-email/${token}" target="_blank">Verify Email</a>
+          <a href='${
+            APP_ENV === "development"
+              ? `http://localhost:${PORT}`
+              : `${APP_URL}`
+          }/api/v1/users/verify-email/${token}' target="_blank">Verify Email</a>
         </div>
         <p>If you didn’t sign up for this account, you can safely ignore this email.</p>
         <p>Thanks,<br>The movie-management Team</p>
