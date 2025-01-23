@@ -33,7 +33,7 @@ app.use("/api/v1", movieRouter);
 app.use("/api/v1", ratingRouter);
 
 app.get(
-  "/",
+  "/api/v1",
   TryCatch(async (req, res) => {
     return res.json(new ApiResponse(200, "Welcome to Movie API"));
   })
